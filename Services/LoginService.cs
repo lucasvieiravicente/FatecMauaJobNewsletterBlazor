@@ -26,9 +26,9 @@ namespace FatecMauaJobNewsletter.Services
             string jsonRequest = JsonConvert.SerializeObject(loginRequest);
             var contentType = _configuration.GetSection("ContentType").GetSection("Body");
             var content = new StringContent(jsonRequest, Encoding.UTF8, contentType.Value);
-            HttpResponseMessage response = await _httpClient.PostAsync(_apiUrl, content);
 
             LoginResponse loginResponse = null;
+            var response = await _httpClient.PostAsync($"{_apiUrl}/api/Login/Login", content);
 
             if (response.IsSuccessStatusCode)
             {
