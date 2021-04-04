@@ -1,0 +1,48 @@
+﻿@page "/SignUp"
+@inject ISignUpService SignUpService
+
+<Header Title="Cadastre-se no nosso portal"></Header>
+<div class="container-fluid text-center w-50">
+    <EditForm Model="request" class="form-signin">
+        <label for="inputEmail" class="sr-only">Login</label>
+        <input id="inputEmail" class="form-control" placeholder="Login" @bind-value="request.Login" required autofocus>
+
+        <label for="inputPassword" class="sr-only">Senha</label>
+        <input type="password" id="inputPassword" class="form-control mt-3" placeholder="Senha" @bind-value="request.Password" required>
+
+        <label class="sr-only">Nome</label>
+        <input class="form-control mt-3" placeholder="Nome" @bind-value="request.Name">
+
+        <label class="sr-only">E-mail</label>
+        <input class="form-control mt-3" placeholder="E-mail" @bind-value="request.Email">
+
+        <label class="sr-only">Telefone/Celular</label>
+        <input class="form-control mt-3" placeholder="Telefone/Celular" @bind-value="request.PhoneNumber">
+
+        <Button ButtonTitle="Registrar" Function="CallSignUp" InvalidModel="InvalidModel()" ></Button>
+        @if (hasMessage)
+        {
+            <h5 class="h5 mt-3 font-weight-bolder">@message</h5>
+        }        
+    </EditForm>
+</div>
+
+@code {
+    public SignUpRequest request = new SignUpRequest();
+    string message = "";
+    bool hasMessage = false;
+
+    private async Task CallSignUp()
+    {
+        message = await SignUpService.SignUpStudent(request);
+        hasMessage = !string.IsNullOrEmpty(message);
+        StateHasChanged();
+    }
+
+    private bool InvalidModel()
+    {
+        return string.IsNullOrEmpty(request.Name) ||
+               string.IsNullOrEmpty(request.Login) ||
+               string.IsNullOrEmpty(request.Password);
+    }
+}

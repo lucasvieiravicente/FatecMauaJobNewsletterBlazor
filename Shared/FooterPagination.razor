@@ -1,0 +1,39 @@
+﻿<div class="row mt-2 justify-content-end">
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= TotalPages; i++)
+            {
+                int index = i;
+                <li class="page-item border-dark">
+                    <a class="page-link font-weight-bolder" @onclick="() => SetPageAndGetValues(index)">@index</a>
+                </li>
+            }
+        </ul>
+    </nav>
+</div>
+
+@code {
+
+    [Parameter]
+    public int TotalPages { get; set; }
+
+    [Parameter]
+    public Func<PaginationRequest, Task> Function { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Function.Invoke(Pagination);
+    }
+
+    private PaginationRequest Pagination = new PaginationRequest
+    {
+        PageIndex = 1,
+        PageSize = 10
+    };
+
+    private async Task SetPageAndGetValues(int page)
+    {
+        Pagination.PageIndex = page;
+        await Function.Invoke(Pagination);
+    }
+}

@@ -1,0 +1,55 @@
+﻿@if (Loading)
+{
+    <button class="@GetLoadingButtonClass()" disabled><i class="fas fa-circle-notch fa-spin"></i> Carregando...</button>
+}
+else
+{
+    <button class="@GetButtonClass()" disabled="@InvalidModel" @onclick="CallMethod">@ButtonTitle</button>
+}
+
+@code {        
+
+    [Parameter]
+    public bool InvalidModel { get; set; }
+
+    [Parameter]
+    public string ButtonTitle { get; set; }
+
+    [Parameter]
+    public string ButtonStyle { get; set; }
+
+    [Parameter]
+    public string LoadingButtonStyle { get; set; }
+
+    [Parameter]
+    public Func<Task> Function { get; set; }
+
+    private bool Loading;
+    private string LoadingClass = "btn btn-lg mt-3 font-weight-bolder btn-dark w-100";
+    private string ClickClass = "btn btn-lg mt-3 font-weight-bolder btn-outline-dark w-100";
+
+    private async Task CallMethod()
+    {
+        Loading = true;
+
+        await Function.Invoke();
+
+        Loading = false;
+    }
+
+    private string GetButtonClass()
+    {
+        if (string.IsNullOrEmpty(ButtonStyle))
+            return ClickClass;
+        else
+            return ButtonStyle;
+    }
+
+    private string GetLoadingButtonClass()
+    {
+        if (string.IsNullOrEmpty(LoadingButtonStyle))
+            return LoadingClass;
+        else
+            return LoadingButtonStyle;
+    }
+}

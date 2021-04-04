@@ -1,0 +1,46 @@
+﻿@page "/ReprovedJob"
+@inject IJobService JobService
+@inject NavigationManager NavManager
+
+<Header Title="Suas vagas reprovadas"></Header>
+<div class="container-fluid w-100">
+    <div class="row">
+        @if (JobsPaginated.Data.Count() > 0)
+        {
+            foreach (var job in JobsPaginated.Data)
+            {
+                <JobReprovedResumeCard Job="job"></JobReprovedResumeCard>
+            }
+        }
+        else
+        {
+            <div class="alert alert-dark w-75 m-auto" role="alert">
+                Nenhuma vaga pendente foi localizada.
+            </div>
+        }
+    </div>
+    <FooterPagination TotalPages="JobsPaginated.TotalPages" Function="GetReprovedJobs"></FooterPagination>
+</div>
+
+@code {
+    public PaginationResponse<JobResume> JobsPaginated = new PaginationResponse<JobResume>();
+
+    private async Task GetReprovedJobs(PaginationRequest pagination)
+    {
+        try
+        {
+            JobsPaginated = await JobService.GetUserAprovedPaginatedJobs(pagination);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void OpenJob(Guid jobId)
+    {
+        var uri = $"/StudentJobReprovedView/{jobId}";
+        NavManager.NavigateTo(uri);
+    }
+}

@@ -1,47 +1,28 @@
-﻿using FatecMauaJobNewsletter.Domains.Models;
-using FatecMauaJobNewsletter.Services.Interfaces;
+﻿using FatecMauaJobNewsletter.Services.Interfaces;
 using System.Threading.Tasks;
-using System.Net.Http;
-using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
-using System.Text;
+using FatecMauaJobNewsletter.Domains.Models.Response;
+using FatecMauaJobNewsletter.Domains.Models.Request;
+using FatecMauaJobNewsletter.Domains.Utils;
+using System;
 
 namespace FatecMauaJobNewsletter.Services
 {
-    public class LoginService : ILoginService
+    public class LoginService : BaseService, ILoginService
     {
-        private readonly HttpClient _httpClient;
-        private readonly IConfiguration _configuration;
-        private readonly string _apiUrl;
-
-        public LoginService(IConfiguration configuration)
-        {
-            _httpClient = new HttpClient();
-            _configuration = configuration;
-            _apiUrl = _configuration.GetConnectionString("Api");
-        }
-
         public async Task<LoginResponse> Login(LoginRequest loginRequest)
         {
-            string jsonRequest = JsonConvert.SerializeObject(loginRequest);
-            var contentType = _configuration.GetSection("ContentType").GetSection("Body");
-            var content = new StringContent(jsonRequest, Encoding.UTF8, contentType.Value);
-
-            LoginResponse loginResponse = null;
-            var response = await _httpClient.PostAsync($"{_apiUrl}/api/Login/Login", content);
+            var response = await _httpClient.Post($"{_apiUrl}/Login", loginRequest);
 
             if (response.IsSuccessStatusCode)
             {
-                string httpResponse = await response.Content.ReadAsStringAsync();
-                loginResponse = JsonConvert.DeserializeObject<LoginResponse>(httpResponse);
+                var loginResponse = await response.Content.FormatContentTo<LoginResponse>();
+                HttpUtils.JwtToken = loginResponse.JwtToken;
+                return loginResponse;
             }
-
-            return loginResponse;
-        }
-
-        public Task Register(SignUpRequest signUpRequest)
-        {
-            throw new System.NotImplementedException();
+            else
+            {
+                throw new Exception("Login ou senha incorreto.");
+            }
         }
     }
 }

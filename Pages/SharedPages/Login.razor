@@ -1,0 +1,56 @@
+﻿@page "/login"
+@inject IJSRuntime IJSRuntime
+@inject ILoginService LoginService
+@inject NavigationManager navManager
+
+<Header Title="Faça o login"></Header>
+<div class="container-fluid text-center w-50">
+    <EditForm Model="request" class="form-signin">
+        <label for="inputEmail" class="sr-only">Login</label>
+        <input id="inputEmail" class="form-control" placeholder="Login" @bind-value="request.Login" required autofocus>
+
+        <label for="inputPassword" class="sr-only">Senha</label>
+        <input type="password" id="inputPassword" class="form-control mt-3" placeholder="Senha" @bind-value="request.Password" required>
+
+        <Button ButtonTitle="Entrar" InvalidModel="InvalidModel()" Function="CallLogin"></Button>
+        @if (hasError)
+        {
+            <h5 class="h5 mt-3 font-weight-bolder">@messageError</h5>
+        }
+    </EditForm>
+</div>
+
+@code {
+    private bool hasError;
+    private string messageError = "";
+    public LoginRequest request = new LoginRequest();
+
+    public async Task CallLogin()
+    {
+        try
+        {
+            var loginResponse = await LoginService.Login(request);
+
+            if (loginResponse.IsAdmin)
+                await IJSRuntime.InvokeVoidAsync("enableNavAdminLogged");
+            else
+                await IJSRuntime.InvokeVoidAsync("enableNavStudentLogged");
+
+            hasError = false;
+            navManager.NavigateTo("/");
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            messageError = ex.Message;
+            hasError = true;
+            StateHasChanged();
+        }
+    }
+
+    private bool InvalidModel()
+    {
+        return string.IsNullOrEmpty(request.Login) ||
+               string.IsNullOrEmpty(request.Password);
+    }
+}

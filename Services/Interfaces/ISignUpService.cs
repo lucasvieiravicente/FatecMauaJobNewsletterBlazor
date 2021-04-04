@@ -1,11 +1,12 @@
 ﻿using FatecMauaJobNewsletter.Domains.Models.Request;
-using FatecMauaJobNewsletter.Domains.Models.Response;
 using System.Threading.Tasks;
 
 namespace FatecMauaJobNewsletter.Services.Interfaces
 {
-    public interface ILoginService
+    public interface ISignUpService
     {
-        Task<LoginResponse> Login(LoginRequest loginRequest);
+        Task<string> SignUpStudent(SignUpRequest request);
+
+        Task<string> SignUpAdmin(SignUpRequest request);
     }
 }

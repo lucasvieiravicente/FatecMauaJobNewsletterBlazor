@@ -1,0 +1,199 @@
+﻿@page "/JobAprovedView/{JobId}"
+@inject IJobService JobService
+@inject IJobAdminService JobAdminService
+@inject NavigationManager NavManager
+
+<Header Title="Dados da vaga"></Header>
+<div class="container-fluid text-center">
+    <div class="form-signin">
+        <div class="row">
+            <div class="input-group p-2 col-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Vaga</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.JobName" disabled>
+            </div>
+            <div class="input-group p-2 col-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Área de atuação</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.JobArea" disabled>
+            </div>
+            <div class="input-group p-2 col-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Salário</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.Salary" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group p-2 col-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Descrição</span>
+                </div>
+                <input class="form-control col-12" placeholder="Não preenchido" @bind-value="Job.JobDescription" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group  p-2 col-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Responsável pela vaga</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.JobResponsible" disabled>
+            </div>
+
+            <div class="input-group p-2 col-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Telefone</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.ResponsiblePhoneNumber" disabled>
+            </div>
+
+            <div class="input-group p-2 col-4">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">E-mail</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.ResponsibleEmail" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group p-2 col-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Início do contrato</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.StartDateJobVacancy" disabled>
+            </div>
+
+            <div class="input-group p-2 col-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Fim do contrato</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.EndDateJobVacancy" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group p-2 col-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">UF</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.State" disabled>
+            </div>
+
+            <div class="input-group p-2 col-6">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Cidade</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.City" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group p-2 col-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">CEP</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.ZipCode" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group p-2 col-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Logradouro</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.Address" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-group p-2 col-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon3">Número</span>
+                </div>
+                <input class="form-control" placeholder="Não preenchido" @bind-value="Job.CompanyNumber" disabled>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="p-2 col-12">
+                <textarea class="form-control col-12" rows="3" placeholder="Observação" @bind="JobManagement.Description"></textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-5 m-auto">
+                <Button ButtonStyle="btn btn-outline-danger font-weight-bold w-100"
+                        LoadingButtonStyle="btn btn-danger font-weight-bold w-100"
+                        Function="RemoveJob"
+                        ButtonTitle="Remover">
+                </Button>
+            </div>
+            <div class="col-5 m-auto">
+                <Button ButtonStyle="btn btn-outline-dark font-weight-bold w-100"
+                        LoadingButtonStyle="btn btn-dark font-weight-bold w-100"
+                        Function="ReturnPage"
+                        ButtonTitle="Retornar">
+                </Button>
+            </div>
+        </div>
+
+        @if (hasMessage)
+        {
+            <h5 class="h5 mt-3 font-weight-bolder">@message</h5>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string JobId { get; set; }
+
+    private JobVacancy Job = new JobVacancy();
+    private JobManagement JobManagement = new JobManagement();
+    private bool hasMessage = false;
+    private string message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Job = await JobService.GetJobPerId(JobId);
+            JobManagement = new JobManagement() { Id = Job.Id };
+        }
+        catch(Exception ex)
+        {
+            message = ex.Message;
+            hasMessage = !string.IsNullOrEmpty(message);
+            StateHasChanged();
+        }
+    }
+
+    private async Task RemoveJob()
+    {
+        try
+        {
+            await JobAdminService.RemoveJob(JobManagement);
+            NavManager.NavigateTo("/Admin/AdministrateAprovedJob");
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+            hasMessage = !string.IsNullOrEmpty(message);
+        }
+    }
+
+    private Task ReturnPage()
+    {
+        return Task.Run(() => NavManager.NavigateTo("/Admin/AdministrateAprovedJob"));
+    }
+
+    private bool ValidModel()
+    {
+        return string.IsNullOrEmpty(Job.JobName) ||
+               string.IsNullOrEmpty(Job.JobArea);
+    }
+}

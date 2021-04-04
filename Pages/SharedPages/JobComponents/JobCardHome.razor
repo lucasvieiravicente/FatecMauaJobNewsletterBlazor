@@ -1,0 +1,35 @@
+﻿<div class="@_class" id="@Id" role="tabpanel">
+    <div class="card bg-light w-100">
+        <div class="card-header">@CardTitle</div>
+        <div class="card-body">
+            @foreach (var value in Values)
+            {
+                <p class="card-text"><strong>@value.Key:</strong> @value.Value</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public string Id { get; set; }
+
+    [Parameter]
+    public string CardTitle { get; set; }
+
+    [Parameter]
+    public bool CardActive { get; set; }
+
+    [Parameter]
+    public Dictionary<string, string> Values { get; set; }
+
+    private string _class = "tab-pane fade show fill";
+
+    protected override void OnInitialized()
+    {
+        if (CardActive)
+            _class += " active";
+    }
+
+}

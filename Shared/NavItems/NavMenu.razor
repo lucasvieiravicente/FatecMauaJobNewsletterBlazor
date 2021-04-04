@@ -1,0 +1,69 @@
+﻿@inject ICookieService CookieService
+@inject IJSRuntime IJSRuntime
+@inject NavigationManager navManager
+
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">Fatec Mauá Vagas</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    @* Menu Login *@
+    <NavGroupLogin Id="navMenuLogin"></NavGroupLogin>
+
+    @* Menu students *@
+    <NavGroupStudent Id="navMenuStudent" Logout="Logout"></NavGroupStudent>
+    
+    @* Menu admin *@
+    <NavGroupAdmin Id="navMenuAdmin" Logout="Logout"></NavGroupAdmin>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private UserLogged user;
+
+    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            user = await CookieService.VerifyToken();
+            await ChangeNavMenu();
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            await IJSRuntime.InvokeVoidAsync("enableLoginNavMenu");
+        }
+    }
+
+    private async Task ChangeNavMenu()
+    {
+        if (user.IsLogged)
+        {
+            if(user.IsAdmin)
+                await IJSRuntime.InvokeVoidAsync("enableNavAdminLogged");
+            else
+                await IJSRuntime.InvokeVoidAsync("enableNavStudentLogged");
+        }
+        else
+        {
+            await Logout();
+        }
+    }
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    public async Task Logout()
+    {
+        await CookieService.DeleteToken();
+        await IJSRuntime.InvokeVoidAsync("enableLoginNavMenu");
+        navManager.NavigateTo("/Home");
+    }
+}

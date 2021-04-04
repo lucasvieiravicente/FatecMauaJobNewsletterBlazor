@@ -1,0 +1,30 @@
+﻿<ul id="@Id" class="nav flex-column">
+    <NavItem Title="Home"
+             Href="Home"
+             IconClass="oi oi-home">
+    </NavItem>
+    <NavItem Title="Registrar vagas"
+             Href="JobVacancyRegister"
+             IconClass="oi oi-list-rich">
+    </NavItem>
+    <NavItem Href="AprovedJob"
+             Title="Vagas aprovadas"
+             IconClass="oi oi-list-rich">
+    </NavItem>
+    <NavItem Href="ReprovedJob"
+             Title="Vagas reprovadas"
+             IconClass="oi oi-list-rich">
+    </NavItem>
+    <NavItem Title="Logout"
+             IconClass="oi oi-account-logout"
+             Function="Logout">
+    </NavItem>
+</ul>
+
+@code {
+    [Parameter]
+    public Func<Task> Logout { get; set; }
+
+    [Parameter]
+    public string Id { get; set; }
+}

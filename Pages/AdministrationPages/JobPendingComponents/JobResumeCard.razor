@@ -1,0 +1,113 @@
+﻿@inject NavigationManager NavManager
+@inject IJobAdminService JobAdminService
+
+@if (isNotDeleted)
+{
+    <div class="card border-dark ml-auto mr-auto mt-2 w-45">
+        <div class="card-header bg-transparent border-dark">
+            <div class="bg-light">
+                <p class="card-title font-weight-bold float-left">@Job.JobName</p>
+                <div class="float-right">
+                    <small class="font-weight-bold">@GetFormatedDate()</small>
+                </div>
+            </div>
+        </div>
+        <div class="card-body text-dark">
+            <p>@GetSalary()</p>
+            <p class="card-text">@GetJobDescription()</p>
+        </div>
+        <div class="card-footer bg-transparent border-dark">
+            <Button ButtonStyle="btn btn-outline-success mt-1 font-weight-bold w-100"
+                    LoadingButtonStyle="btn btn-success mt-1 font-weight-bold w-100"
+                    Function="AproveJob"
+                    ButtonTitle="Aprovar">
+            </Button>
+            <Button ButtonStyle="btn btn-outline-danger mt-1 font-weight-bold w-100"
+                    LoadingButtonStyle="btn btn-danger mt-1 font-weight-bold w-100"
+                    Function="ReproveJob"
+                    ButtonTitle="Reprovar">
+            </Button>
+            <Button ButtonStyle="btn btn-outline-dark mt-1 font-weight-bold w-100"
+                    LoadingButtonStyle="btn btn-dark mt-1 font-weight-bold w-100"
+                    Function="OpenJob"
+                    ButtonTitle="Visualizar">
+            </Button>
+        </div>
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public JobResume Job { get; set; }
+
+    private JobManagement JobManagement;
+    private bool isNotDeleted = true;
+
+    protected override void OnParametersSet()
+    {
+        JobManagement = new JobManagement() { Id = Job.Id };
+    }
+
+    private async Task AproveJob()
+    {
+        try
+        {
+            await JobAdminService.AproveJob(JobManagement);
+            UpdateCard();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private async Task ReproveJob()
+    {
+        try
+        {
+            await JobAdminService.ReproveJob(JobManagement);
+            UpdateCard();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private Task OpenJob()
+    {
+        return Task.Run(() =>
+        {
+            var uri = $"/JobView/{Job.Id}";
+            NavManager.NavigateTo(uri);
+        });
+    }
+
+    private void UpdateCard()
+    {
+        isNotDeleted = false;
+        StateHasChanged();
+    }
+
+    private string GetFormatedDate()
+    {
+        return Job.CreatedAt.ToString("dd/MM/yyyy");
+    }
+
+    private string GetJobDescription()
+    {
+        if (string.IsNullOrEmpty(Job.JobDescription))
+            return "Descrição não preenchida";
+        else
+            return Job.JobDescription;
+    }
+
+    private string GetSalary()
+    {
+        @if (string.IsNullOrEmpty(Job.Salary))        
+            return "Salário não preenchido";        
+        else        
+            return $"R$ {Job.Salary}";        
+    }
+}

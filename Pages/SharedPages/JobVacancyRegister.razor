@@ -1,0 +1,173 @@
+﻿@page "/JobVacancyRegister"
+@inject IPagesService PagesService
+@inject IJobService JobService
+
+<Header Title="Cadastre a vaga disponível"></Header>
+<div class="container-fluid text-center w-50">
+    <EditForm Model="request" class="form-signin">
+        <input class="form-control" placeholder="Vaga" @bind-value="request.JobName" required autofocus>
+
+        <input class="form-control mt-3" placeholder="Área de atuação" @bind-value="request.JobArea" required>
+
+        <input class="form-control mt-3" placeholder="Descrição da vaga" @bind-value="request.JobDescription">
+
+        <input class="form-control mt-3" placeholder="Responsável pela vaga" @bind-value="request.JobResponsible">
+
+        <input class="form-control mt-3" placeholder="Telefone do responsável" @bind-value="request.ResponsiblePhoneNumber">
+        <small>Digite o telefone completo com DDD sem traço</small>
+
+        <input class="form-control mt-1" placeholder="E-mail do responsável" @bind-value="request.ResponsibleEmail">
+
+        <div class="input-group mt-3">
+            <div class="input-group-prepend">
+                <span class="input-group-text">R$</span>
+            </div>
+            <input type="text" class="form-control" @bind-value="request.Salary">
+        </div>
+
+        <input type="date" class="form-control mt-3" placeholder="Data de ínicio" @bind-value="request.StartDateJobVacancy">
+
+        <input type="date" class="form-control mt-3" placeholder="Previsão do fim de contrato" @bind-value="request.EndDateJobVacancy">
+
+        <select class="form-control mt-3" @onchange="GetCities">
+            <option disabled>Selecione um estado</option>
+            @foreach (var state in States)
+            {
+                <option value="@state.Sigla">@state.Sigla</option>
+            }
+        </select>
+
+        <select class="form-control mt-3" @bind="request.City">
+            @if (Cities.Any())
+            {
+                <option disabled>Selecione uma cidade</option>
+                foreach (var city in Cities)
+                {
+                    <option value="@city.Nome">@city.Nome</option>
+                }
+            }
+            else
+            {
+                <option>Nenhuma cidade, selecione ao menos uma UF</option>
+            }
+        </select>
+
+        <input class="form-control mt-3" placeholder="CEP" @onchange="GetAddress">
+        <small>Digite sem traço ou ponto o CEP completo para pesquisar o Bairro e Logradouro </small>
+
+        <input class="form-control mt-1" placeholder="Bairro" @bind-value="request.Neighborhood">
+
+        <input class="form-control mt-3" placeholder="Logradouro" @bind-value="request.Address">
+
+        <input class="form-control mt-3" placeholder="Número" @bind-value="request.CompanyNumber">
+
+        <Button ButtonTitle="Registrar" InvalidModel="InvalidModel()" Function="CallRegisterJob"></Button>
+        @if (hasMessage)
+        {
+            <h5 class="h5 mt-3 font-weight-bolder">@message</h5>
+        }
+    </EditForm>
+</div>
+
+@code {
+    public JobVacancyRequest request = new JobVacancyRequest();
+    State[] States;
+    City[] Cities;
+    Address Address;
+
+    string message = "";
+    bool hasMessage = false;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        States = new State[] { };
+        Cities = new City[] { };
+        Address = new Address();
+
+        try
+        {
+            States = await PagesService.GetStatesAsync();
+            hasMessage = false;
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+            hasMessage = true;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task GetCities(ChangeEventArgs e)
+    {
+        request.State = e.Value.ToString();
+        var stateId = States.Where(x => x.Sigla == request.State).FirstOrDefault().Id;
+
+        try
+        {
+            Cities = await PagesService.GetCitiesPerStateIdAsync(stateId.ToString());
+            hasMessage = false;
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+            hasMessage = true;
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task GetAddress(ChangeEventArgs e)
+    {
+        if(e.Value.ToString().Length == 8)
+        {
+            try
+            {
+                Address = await PagesService.GetNeighborhoodPerZipCodeAsync(e.Value.ToString());
+                hasMessage = false;
+            }
+            catch (Exception ex)
+            {
+                message = ex.Message;
+                hasMessage = true;
+            }
+            finally
+            {
+                StateHasChanged();
+            }
+
+            request.ZipCode = Address.Cep;
+            request.Neighborhood = Address.Bairro;
+            request.Address = Address.Logradouro;
+        }
+    }
+
+    private async Task CallRegisterJob()
+    {
+        try
+        {
+            message = await JobService.RegisterJob(request);
+            hasMessage = !string.IsNullOrEmpty(message);
+        }
+        catch(Exception ex)
+        {
+            message = ex.Message;
+            hasMessage = !string.IsNullOrEmpty(message);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private bool InvalidModel()
+    {
+        return string.IsNullOrEmpty(request.JobName) ||
+               string.IsNullOrEmpty(request.JobArea);
+    }
+}

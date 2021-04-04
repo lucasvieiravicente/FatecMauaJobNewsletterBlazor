@@ -117,6 +117,27 @@ app {
     color: red;
 }
 
+.page-item {
+    cursor: pointer;
+}
+
+.w-45 {
+    width: 45%;
+}
+
+.fill {
+    min-height: 100% !important;
+    height: 100% !important;
+}
+
+#navMenuStudent, #navMenuAdmin {
+    display: none;
+}
+
+#navItem {
+    cursor: pointer;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;

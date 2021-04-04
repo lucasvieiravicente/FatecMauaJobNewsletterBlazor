@@ -1,0 +1,46 @@
+﻿@page "/Admin/AdministrateJob"
+@inject IJobService JobService
+@inject NavigationManager NavManager
+
+<Header Title="Administração de vagas pendentes"></Header>
+<div class="container-fluid w-100">
+    <div class="row">
+        @if (JobsPaginated.Data.Count() > 0)
+        {
+            foreach (var job in JobsPaginated.Data)
+            {
+                <JobResumeCard Job="job"></JobResumeCard>
+            }
+        }
+        else
+        {
+            <div class="alert alert-dark w-75 m-auto" role="alert">
+                Nenhuma vaga pendente foi localizada.
+            </div>
+        }
+    </div>
+    <FooterPagination TotalPages="JobsPaginated.TotalPages" Function="GetJobs"></FooterPagination>
+</div>
+
+@code {
+    public PaginationResponse<JobResume> JobsPaginated = new PaginationResponse<JobResume>();
+
+    private async Task GetJobs(PaginationRequest pagination)
+    {
+        try
+        {
+            JobsPaginated = await JobService.GetPendingJobsResumes(pagination);
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+    private void OpenJob(Guid jobId)
+    {
+        var uri = $"/JobView/{jobId}";
+        NavManager.NavigateTo(uri);
+    }
+}

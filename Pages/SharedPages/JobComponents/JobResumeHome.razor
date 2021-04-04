@@ -1,0 +1,43 @@
+﻿<div class="card ml-auto mr-auto mt-4 mb-4">   
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link page-item active" id="nav-home-tab" data-toggle="tab" data-target="#@DivJobId" role="tab" aria-controls="nav-home" aria-selected="true">Sobre a vaga</a>
+
+            <a class="nav-item nav-link page-item" id="nav-profile-tab" data-toggle="tab" data-target="#@DivAddressId" role="tab" aria-controls="nav-profile" aria-selected="false">Endereço da vaga</a>
+            <a class="nav-item nav-link page-item" id="nav-contact-tab" data-toggle="tab" data-target="#@DivResponsibleId" role="tab" aria-controls="nav-contact" aria-selected="false">Responsável pela vaga</a>
+        </div>
+    </nav>
+    <JobInformationsHome 
+                        DivJobId="@DivJobId"
+                        DivAddressId="@DivAddressId"
+                        DivResponsibleId="@DivResponsibleId"
+                        Job="@Job">
+    </JobInformationsHome>
+</div>
+
+@code {
+
+    [Parameter]
+    public JobVacancy Job { get; set; }
+
+    public string DivJobId;
+    public string DivAddressId;
+    public string DivResponsibleId;
+
+    protected override void OnInitialized()
+    {
+        DivJobId = $"jobResume_{Job.Id}";
+        DivAddressId = $"jobAddress_{Job.Id}";
+        DivResponsibleId = $"jobResponsible_{Job.Id}";
+    }
+
+    public Dictionary<string, string> GetListOfNavs()
+    {
+        return new Dictionary<string, string>
+        {
+            { DivJobId, "Sobre a vaga" },
+            { DivAddressId, "Endereço da vaga" },
+            { DivResponsibleId, "Responsável pela vaga" }
+        };
+    }
+}

@@ -1,0 +1,22 @@
+﻿<ul id="@Id" class="nav flex-column">
+    <NavItem 
+             Title="Home"
+             Href="Home"
+             IconClass="oi oi-home">
+    </NavItem>
+    <NavItem 
+             Href="Login"
+             Title="Login"
+             IconClass="oi oi-account-login">
+    </NavItem>
+    <NavItem 
+             Href="SignUp"
+             Title="Registre-se"
+             IconClass="oi oi-account-login">
+    </NavItem>
+</ul>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+}

@@ -1,0 +1,94 @@
+﻿<div class="tab-content" id="nav-tabContent">
+    <JobCardHome Id="@DivJobId"
+                 CardActive="true"
+                 CardTitle="@jobInfoCardTitle"
+                 Values="@jobInfos">
+    </JobCardHome>
+    <JobCardHome Id="@DivAddressId"
+                 CardTitle="@jobAddressCardTitle"
+                 Values="@jobAddressInfos">
+    </JobCardHome>
+    <JobCardHome Id="@DivResponsibleId"
+                 CardTitle="@jobResponsibleCardTitle"
+                 Values="@jobResponsibleInfos">
+    </JobCardHome>
+</div>
+
+@code {
+
+    [Parameter]
+    public JobVacancy Job { get; set; }
+
+    [Parameter]
+    public string DivJobId { get; set; }
+
+    [Parameter]
+    public string DivAddressId { get; set; }
+
+    [Parameter]
+    public string DivResponsibleId { get; set; }
+
+    private string jobInfoCardTitle;
+    private string jobAddressCardTitle;
+    private string jobResponsibleCardTitle;
+
+    private Dictionary<string, string> jobInfos;
+    private Dictionary<string, string> jobAddressInfos;
+    private Dictionary<string, string> jobResponsibleInfos;
+
+    protected override void OnInitialized()
+    {
+        jobInfoCardTitle = $"Sobre a vaga - {Job.JobName}";
+        jobAddressCardTitle = $"Endereço da vaga - {Job.JobName}";
+        jobResponsibleCardTitle = $"Responsável pela vaga - {Job.JobName}";
+
+        jobInfos = new Dictionary<string, string>
+        {
+            { "Área de atuação", GetTextInfo(Job.JobArea) },
+            { "Descrição", GetTextInfo(Job.JobDescription) },
+            { "Salário", GetDecimalInfo(Job.Salary) },
+            { "Início de contrato", GetDateInfo(Job.StartDateJobVacancy) },
+            { "Fim de contrato", GetDateInfo(Job.EndDateJobVacancy) }
+        };
+
+        jobAddressInfos = new Dictionary<string, string>
+        {
+            { "Estado", GetTextInfo(Job.State) },
+            { "Cidade", GetTextInfo(Job.City) },
+            { "Logradouro", GetTextInfo(Job.Address) },
+            { "Número", GetTextInfo(Job.CompanyNumber) },
+            { "CEP", GetTextInfo(Job.ZipCode) },
+        };
+
+        jobResponsibleInfos = new Dictionary<string, string>
+        {
+            { "Nome", GetTextInfo(Job.JobResponsible) },
+            { "E-mail", GetTextInfo(Job.ResponsibleEmail) },
+            { "Telefone", GetTextInfo(Job.ResponsiblePhoneNumber) },
+        };
+    }
+
+    public string GetTextInfo(string info)
+    {
+        if (string.IsNullOrEmpty(info))
+            return "Não preenchido";
+        else
+            return info;
+    }
+
+    public string GetDateInfo(DateTime? info)
+    {
+        if (!info.HasValue || info == DateTime.MinValue)
+            return "Não preenchido";
+        else
+            return info.Value.ToString("dd/MM/yyyy");
+    }
+
+    public string GetDecimalInfo(decimal? info)
+    {
+        if (info.HasValue)
+            return $"R$ {info.Value}";
+        else
+            return "Não preenchido"; ;
+    }
+}

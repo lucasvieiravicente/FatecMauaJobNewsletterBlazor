@@ -1,0 +1,60 @@
+﻿@inject NavigationManager NavManager
+@inject HttpClient Http
+
+<div class="card border-dark ml-auto mr-auto mt-2 w-45">
+    <div class="card-header bg-transparent border-dark">
+        <div class="bg-light">
+            <p class="card-title font-weight-bold float-left">@Job.JobName</p>
+            <div class="float-right">
+                <small class="font-weight-bold">@GetFormatedDate()</small>
+            </div>
+        </div>
+    </div>
+    <div class="card-body text-dark">
+        <p>@GetSalary()</p>
+        <p class="card-text">@GetJobDescription()</p>
+    </div>
+    <div class="card-footer bg-transparent border-dark">
+        <Button ButtonStyle="btn btn-outline-dark mt-1 font-weight-bold w-100"
+                LoadingButtonStyle="btn btn-dark mt-1 font-weight-bold w-100"
+                Function="OpenJob"
+                ButtonTitle="Visualizar">
+        </Button>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public JobResume Job { get; set; }
+
+    private Task OpenJob()
+    {
+        return Task.Run(() =>
+        {
+            var uri = $"/StudentJobReprovedView/{Job.Id}";
+            NavManager.NavigateTo(uri);
+        });
+    }
+
+    private string GetFormatedDate()
+    {
+        return Job.CreatedAt.ToString("dd/MM/yyyy");
+    }
+
+    private string GetJobDescription()
+    {
+        if (string.IsNullOrEmpty(Job.JobDescription))
+            return "Descrição não preenchida";
+        else
+            return Job.JobDescription;
+    }
+
+    private string GetSalary()
+    {
+        @if (string.IsNullOrEmpty(Job.Salary))
+            return "Salário não preenchido";
+        else
+            return $"R$ {Job.Salary}";
+    }
+}
