@@ -130,6 +130,11 @@ app {
     height: 100% !important;
 }
 
+#initialLoader {
+   height: 200px;
+   width: 200px;
+}
+
 #navMenuStudent, #navMenuAdmin {
     display: none;
 }
