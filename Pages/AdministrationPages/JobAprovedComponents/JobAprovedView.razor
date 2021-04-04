@@ -1,6 +1,7 @@
 ﻿@page "/JobAprovedView/{JobId}"
 @inject IJobService JobService
 @inject IJobAdminService JobAdminService
+@inject SweetAlertService Swal
 @inject NavigationManager NavManager
 
 <Header Title="Dados da vaga"></Header>
@@ -164,7 +165,7 @@
             Job = await JobService.GetJobPerId(JobId);
             JobManagement = new JobManagement() { Id = Job.Id };
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             message = ex.Message;
             hasMessage = !string.IsNullOrEmpty(message);
@@ -176,8 +177,13 @@
     {
         try
         {
-            await JobAdminService.RemoveJob(JobManagement);
-            NavManager.NavigateTo("/Admin/AdministrateAprovedJob");
+            SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja remover a vaga?"));
+
+            if (result.IsConfirmed)
+            {
+                await JobAdminService.RemoveJob(JobManagement);
+                NavManager.NavigateTo("/Admin/AdministrateAprovedJob");
+            }
         }
         catch (Exception ex)
         {

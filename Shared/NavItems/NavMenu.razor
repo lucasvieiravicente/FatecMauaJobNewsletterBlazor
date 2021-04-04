@@ -1,5 +1,6 @@
 ﻿@inject ICookieService CookieService
 @inject IJSRuntime IJSRuntime
+@inject SweetAlertService Swal
 @inject NavigationManager navManager
 
 <div class="top-row pl-4 navbar navbar-dark">
@@ -15,7 +16,7 @@
 
     @* Menu students *@
     <NavGroupStudent Id="navMenuStudent" Logout="Logout"></NavGroupStudent>
-    
+
     @* Menu admin *@
     <NavGroupAdmin Id="navMenuAdmin" Logout="Logout"></NavGroupAdmin>
 </div>
@@ -32,7 +33,7 @@
         {
             string token = await IJSRuntime.InvokeAsync<string>("getJwtToken");
 
-            if(!string.IsNullOrEmpty(token))
+            if (!string.IsNullOrEmpty(token))
             {
                 HttpUtils.JwtToken = token;
                 user = await CookieService.VerifyToken();
@@ -40,7 +41,7 @@
 
             await ChangeNavMenu();
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
             await IJSRuntime.InvokeVoidAsync("enableLoginNavMenu");
@@ -51,7 +52,7 @@
     {
         if (user.IsLogged)
         {
-            if(user.IsAdmin)
+            if (user.IsAdmin)
                 await IJSRuntime.InvokeVoidAsync("enableNavAdminLogged");
             else
                 await IJSRuntime.InvokeVoidAsync("enableNavStudentLogged");
@@ -69,9 +70,14 @@
 
     public async Task Logout()
     {
-        CookieService.DeleteToken();
-        await IJSRuntime.InvokeVoidAsync("deleteJwtToken");
-        await IJSRuntime.InvokeVoidAsync("enableLoginNavMenu");
-        navManager.NavigateTo("/Home");
+        SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja se deslogar?"));
+
+        if (result.IsConfirmed)
+        {
+            CookieService.DeleteToken();
+            await IJSRuntime.InvokeVoidAsync("deleteJwtToken");
+            await IJSRuntime.InvokeVoidAsync("enableLoginNavMenu");
+            navManager.NavigateTo("/Home");
+        }
     }
 }

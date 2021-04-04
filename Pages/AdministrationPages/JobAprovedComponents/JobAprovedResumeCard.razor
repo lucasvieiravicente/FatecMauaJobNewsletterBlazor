@@ -1,5 +1,7 @@
 ﻿@inject NavigationManager NavManager
 @inject IJobAdminService JobAdminService
+@inject SweetAlertService Swal
+
 
 @if (isNotDeleted)
 {
@@ -48,10 +50,15 @@
     {
         try
         {
-            await JobAdminService.RemoveJob(JobManagement);
-            UpdateCard();
+            SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja remover a vaga?"));
+
+            if (result.IsConfirmed)
+            {
+                await JobAdminService.RemoveJob(JobManagement);
+                UpdateCard();
+            }
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             Console.WriteLine(ex.Message);
         }

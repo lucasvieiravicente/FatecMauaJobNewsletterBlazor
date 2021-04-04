@@ -2,6 +2,7 @@
 @inject IJobService JobService
 @inject IJobAdminService JobAdminService
 @inject NavigationManager NavManager
+@inject SweetAlertService Swal
 
 <Header Title="Dados da vaga"></Header>
 <div class="container-fluid text-center">
@@ -184,8 +185,13 @@
     {
         try
         {
-            await JobAdminService.AproveJob(JobManagement);
-            NavManager.NavigateTo("/Admin/AdministrateJob");
+            SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja aprovar a vaga?"));
+
+            if (result.IsConfirmed)
+            {
+                await JobAdminService.AproveJob(JobManagement);
+                NavManager.NavigateTo("/Admin/AdministrateJob");
+            }
         }
         catch (Exception ex)
         {
@@ -198,8 +204,13 @@
     {
         try
         {
-            await JobAdminService.ReproveJob(JobManagement);
-            NavManager.NavigateTo("/Admin/AdministrateJob");
+            SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja reprovar a vaga?"));
+
+            if (result.IsConfirmed)
+            {
+                await JobAdminService.ReproveJob(JobManagement);
+                NavManager.NavigateTo("/Admin/AdministrateJob");
+            }
         }
         catch (Exception ex)
         {

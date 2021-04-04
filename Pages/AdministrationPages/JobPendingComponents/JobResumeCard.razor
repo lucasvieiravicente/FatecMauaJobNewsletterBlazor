@@ -1,5 +1,6 @@
 ﻿@inject NavigationManager NavManager
 @inject IJobAdminService JobAdminService
+@inject SweetAlertService Swal
 
 @if (isNotDeleted)
 {
@@ -53,8 +54,13 @@
     {
         try
         {
-            await JobAdminService.AproveJob(JobManagement);
-            UpdateCard();
+            SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja aprovar a vaga?"));
+
+            if (result.IsConfirmed)
+            {
+                await JobAdminService.AproveJob(JobManagement);
+                UpdateCard();
+            }
         }
         catch (Exception ex)
         {
@@ -66,8 +72,13 @@
     {
         try
         {
-            await JobAdminService.ReproveJob(JobManagement);
-            UpdateCard();
+            SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja remover a vaga?"));
+
+            if (result.IsConfirmed)
+            {
+                await JobAdminService.ReproveJob(JobManagement);
+                UpdateCard();
+            }
         }
         catch (Exception ex)
         {
@@ -105,9 +116,9 @@
 
     private string GetSalary()
     {
-        @if (string.IsNullOrEmpty(Job.Salary))        
-            return "Salário não preenchido";        
-        else        
-            return $"R$ {Job.Salary}";        
+        @if (string.IsNullOrEmpty(Job.Salary))
+            return "Salário não preenchido";
+        else
+            return $"R$ {Job.Salary}";
     }
 }

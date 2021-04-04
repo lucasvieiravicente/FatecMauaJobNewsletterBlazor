@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using FatecMauaJobNewsletter.Domains;
+using CurrieTechnologies.Razor.SweetAlert2;
 
 namespace FatecMauaJobNewsletter
 {
@@ -15,6 +16,7 @@ namespace FatecMauaJobNewsletter
             builder.RootComponents.Add<App>("app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            builder.Services.AddSweetAlert2();
             builder.InjectServices();
 
             await builder.Build().RunAsync();
