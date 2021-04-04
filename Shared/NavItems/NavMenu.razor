@@ -30,7 +30,14 @@
     {
         try
         {
-            user = await CookieService.VerifyToken();
+            string token = await IJSRuntime.InvokeAsync<string>("getJwtToken");
+
+            if(!string.IsNullOrEmpty(token))
+            {
+                HttpUtils.JwtToken = token;
+                user = await CookieService.VerifyToken();
+            }
+
             await ChangeNavMenu();
         }
         catch(Exception ex)
@@ -62,7 +69,8 @@
 
     public async Task Logout()
     {
-        await CookieService.DeleteToken();
+        CookieService.DeleteToken();
+        await IJSRuntime.InvokeVoidAsync("deleteJwtToken");
         await IJSRuntime.InvokeVoidAsync("enableLoginNavMenu");
         navManager.NavigateTo("/Home");
     }

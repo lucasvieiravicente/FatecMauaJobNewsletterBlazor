@@ -7,6 +7,6 @@ namespace FatecMauaJobNewsletter.Services.Interfaces
     {
         Task<UserLogged> VerifyToken();
 
-        Task<string> DeleteToken();
+        string DeleteToken();
     }
 }

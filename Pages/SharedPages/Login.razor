@@ -30,6 +30,7 @@
         try
         {
             var loginResponse = await LoginService.Login(request);
+            await IJSRuntime.InvokeVoidAsync("createCookie", loginResponse.JwtToken);
 
             if (loginResponse.IsAdmin)
                 await IJSRuntime.InvokeVoidAsync("enableNavAdminLogged");

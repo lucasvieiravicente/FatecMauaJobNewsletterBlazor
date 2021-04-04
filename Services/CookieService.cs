@@ -28,19 +28,10 @@ namespace FatecMauaJobNewsletter.Services
             }
         }
 
-        public async Task<string> DeleteToken()
+        public string DeleteToken()
         {
-            var response = await _httpClient.Delete($"{_apiUrl}/Cookies");
-
-            if (response.IsSuccessStatusCode)
-            {
-                HttpUtils.JwtToken = "";
-                return Messages.RequestSuccess;
-            }
-            else
-            {
-                throw new Exception(ErrorMessages.RequestError);
-            }
+            HttpUtils.JwtToken = "";
+            return Messages.RequestSuccess;
         }
     }
 }
