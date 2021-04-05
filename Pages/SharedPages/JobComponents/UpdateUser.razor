@@ -1,0 +1,52 @@
+﻿@page "/UpdateUser"
+@inject IUserService UserService
+@inject NavigationManager NavManager
+@inject SweetAlertService Swal
+
+<Header Title="Cadastre um administrador no portal"></Header>
+<div class="container-fluid text-center w-50">
+    <EditForm Model="request" class="form-signin">
+        <input class="form-control mt-3" placeholder="Nome" @bind-value="request.Name">
+
+        <input class="form-control mt-3" placeholder="E-mail" @bind-value="request.Email">
+
+        <input class="form-control mt-3" placeholder="Telefone/Celular" @bind-value="request.PhoneNumber">
+
+        <input type="password" id="inputPassword" class="form-control mt-3" placeholder="Senha" @bind-value="request.Password">
+
+        <Button ButtonTitle="Registrar" Function="CallUpdateUser"></Button>
+        <Button ButtonTitle="Retornar" Function="ReturnPage"></Button>
+        @if (hasMessage)
+        {
+            <h5 class="h5 mt-3 font-weight-bolder">@message</h5>
+        }
+    </EditForm>
+</div>
+
+@code {
+    public UserUpdate request = new UserUpdate();
+    string message = "";
+    bool hasMessage = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        request = await UserService.GetUser();
+    }
+
+    private async Task CallUpdateUser()
+    {
+        SweetAlertResult result = await Swal.FireAsync(CustomAlert.Alert("Deseja alterar as informações?"));
+
+        if (result.IsConfirmed)
+        {
+            message = await UserService.UpdateUser(request);
+            hasMessage = !string.IsNullOrEmpty(message);
+            StateHasChanged();
+        }
+    }
+
+    private Task ReturnPage()
+    {
+        return Task.Run(() => NavManager.NavigateTo("/"));
+    }
+}

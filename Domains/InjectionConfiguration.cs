@@ -16,6 +16,7 @@ namespace FatecMauaJobNewsletter.Domains
             builder.Services.AddTransient<IPagesService, PagesService>();
             builder.Services.AddTransient<ISignUpService, SignUpService>();
             builder.Services.AddTransient<IJobAdminService, JobAdminService>();
+            builder.Services.AddTransient<IUserService, UserService>();
             builder.Services.AddTransient<ICookieService, CookieService>();
         }
     }
