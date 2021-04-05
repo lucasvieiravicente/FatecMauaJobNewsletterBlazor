@@ -22,10 +22,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Function.Invoke(Pagination);
+        await Function.Invoke(PaginationRequest);
     }
 
-    private PaginationRequest Pagination = new PaginationRequest
+    private PaginationRequest PaginationRequest = new PaginationRequest
     {
         PageIndex = 1,
         PageSize = 10
@@ -33,7 +33,7 @@
 
     private async Task SetPageAndGetValues(int page)
     {
-        Pagination.PageIndex = page;
-        await Function.Invoke(Pagination);
+        PaginationRequest.PageIndex = page;
+        await Function.Invoke(PaginationRequest);
     }
 }
