@@ -9,6 +9,7 @@ using Mapster;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FatecMauaJobNewsletter.Services
@@ -23,6 +24,10 @@ namespace FatecMauaJobNewsletter.Services
             {
                 return Messages.RequestSuccess;
             }
+            else if(response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
             else
             {
                 throw new Exception(ErrorMessages.RequestError);
@@ -36,6 +41,10 @@ namespace FatecMauaJobNewsletter.Services
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.FormatContentTo<PaginationResponse<JobVacancy>>();
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
             }
             else
             {
@@ -58,6 +67,10 @@ namespace FatecMauaJobNewsletter.Services
             {
                 return await response.Content.FormatContentTo<PaginationResponse<JobResume>>();
             }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
             else
             {
                 throw new Exception(ErrorMessages.RequestError);
@@ -71,6 +84,10 @@ namespace FatecMauaJobNewsletter.Services
             if (response.IsSuccessStatusCode)
             {
                 return await response.Content.FormatContentTo<JobVacancy>();
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
             }
             else
             {
@@ -88,6 +105,10 @@ namespace FatecMauaJobNewsletter.Services
                 var resumes = content.Data.Adapt<IEnumerable<JobResume>>();
                 return new PaginationResponse<JobResume>(content.Page, content.PageSize, content.TotalPages, resumes);
             }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
+            }
             else
             {
                 throw new Exception(ErrorMessages.RequestError);
@@ -103,6 +124,10 @@ namespace FatecMauaJobNewsletter.Services
                 var content = await response.Content.FormatContentTo<PaginationResponse<JobVacancy>>();
                 var resumes = content.Data.Adapt<IEnumerable<JobResume>>();
                 return new PaginationResponse<JobResume>(content.Page, content.PageSize, content.TotalPages, resumes);
+            }
+            else if (response.StatusCode == HttpStatusCode.BadRequest)
+            {
+                throw new Exception(await response.Content.ReadAsStringAsync());
             }
             else
             {
