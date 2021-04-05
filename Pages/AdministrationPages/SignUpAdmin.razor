@@ -34,9 +34,19 @@
 
     private async Task CallSignUp()
     {
-        message = await SignUpService.SignUpAdmin(request);
-        hasMessage = !string.IsNullOrEmpty(message);
-        StateHasChanged();
+        try
+        {
+            message = await SignUpService.SignUpAdmin(request);
+        }
+        catch (Exception ex)
+        {
+            message = ex.Message;
+        }
+        finally
+        {
+            hasMessage = !string.IsNullOrEmpty(message);
+            StateHasChanged();
+        }
     }
 
     private bool InvalidModel()
