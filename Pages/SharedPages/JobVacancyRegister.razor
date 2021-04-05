@@ -3,13 +3,13 @@
 @inject IJobService JobService
 
 <Header Title="Cadastre a vaga disponível"></Header>
-<div class="container-fluid text-center w-50">
-    <EditForm Model="request" class="form-signin">
+<div class="container-fluid">
+    <EditForm Model="request" class="form-signin form-w-90">
         <input class="form-control" placeholder="Vaga" @bind-value="request.JobName" required autofocus>
 
         <input class="form-control mt-3" placeholder="Área de atuação" @bind-value="request.JobArea" required>
 
-        <input class="form-control mt-3" placeholder="Descrição da vaga" @bind-value="request.JobDescription">
+        <textarea class="form-control mt-3" rows="2" placeholder="Descrição da vaga" @bind="request.JobDescription"></textarea>
 
         <input class="form-control mt-3" placeholder="Responsável pela vaga" @bind-value="request.JobResponsible">
 

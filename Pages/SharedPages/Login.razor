@@ -4,8 +4,8 @@
 @inject NavigationManager navManager
 
 <Header Title="Faça o login"></Header>
-<div class="container-fluid text-center w-50">
-    <EditForm Model="request" class="form-signin">
+<div class="container-fluid">
+    <EditForm Model="request" id="login-form" class="form-signin">
         <label for="inputEmail" class="sr-only">Login</label>
         <input id="inputEmail" class="form-control" placeholder="Login" @bind-value="request.Login" required autofocus>
 
