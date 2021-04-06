@@ -14,7 +14,9 @@
         <input class="form-control mt-3" placeholder="Responsável pela vaga" @bind-value="request.JobResponsible">
 
         <input class="form-control mt-3" placeholder="Telefone do responsável" @bind-value="request.ResponsiblePhoneNumber">
-        <small>Digite o telefone completo com DDD sem traço</small>
+        <div class="text-center">
+            <small>Digite o telefone completo com DDD sem traço</small>
+        </div>        
 
         <input class="form-control mt-1" placeholder="E-mail do responsável" @bind-value="request.ResponsibleEmail">
 
@@ -53,7 +55,9 @@
         </select>
 
         <input class="form-control mt-3" placeholder="CEP" @onchange="GetAddress">
-        <small>Digite sem traço ou ponto o CEP completo para pesquisar o Bairro e Logradouro </small>
+        <div class="text-center">
+            <small>Digite sem traço ou ponto o CEP completo para pesquisar o Bairro e Logradouro </small>
+        </div>        
 
         <input class="form-control mt-1" placeholder="Bairro" @bind-value="request.Neighborhood">
 
