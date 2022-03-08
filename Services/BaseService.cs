@@ -5,7 +5,7 @@ namespace FatecMauaJobNewsletter.Services
     public abstract class BaseService
     {
         protected readonly HttpClient _httpClient;
-        protected const string _apiUrl = "https://fatecmauajobnewsletterapi.azurewebsites.net";
+        protected const string _apiUrl = "https://fatecmauajobnewsletter.azurewebsites.net";
 
         public BaseService()
         {
