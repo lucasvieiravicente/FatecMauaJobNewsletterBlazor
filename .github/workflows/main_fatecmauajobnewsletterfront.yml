@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'FatecMauaJobNewsletterFront'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7A203BD154994F2DBB0E5AF84E4D670A }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_279549B6513D4EA7B9F0DC5B075A4F14 }}
           package: .
